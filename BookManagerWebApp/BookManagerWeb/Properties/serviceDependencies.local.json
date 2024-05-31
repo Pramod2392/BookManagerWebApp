@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "identityapp1": {
+      "connectionInfo": "App registration: ManageBooks, Tenant: ManageBooks (managebooks.onmicrosoft.com - AAD B2C)",
+      "secretStore": "LocalSecretsFile",
+      "resourceId": null,
+      "type": "identityapp.secretStore",
+      "connectionId": "AzureAD:ClientSecret"
+    }
+  }
+}
