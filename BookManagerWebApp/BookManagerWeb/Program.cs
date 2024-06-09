@@ -14,6 +14,7 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
         .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
             .AddDownstreamApi("DownstreamApi",builder.Configuration.GetSection("DownstreamApi"))
+            .AddDownstreamApi("DownstreamApiBook", builder.Configuration.GetSection("DownstreamApiBook"))
             .AddInMemoryTokenCaches();
 
 builder.Services.AddAuthorization(options =>

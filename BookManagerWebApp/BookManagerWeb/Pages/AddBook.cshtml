@@ -1,0 +1,32 @@
+﻿@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model BookManagerWeb.Pages.AddBookModel
+@{
+    ViewData["Title"] = "Add Book";
+}
+
+<form method="post" enctype="multipart/form-data">
+
+    <label class="form-label" style="width: 75px"> Name: </label>
+    <input class="form-text tab" asp-for="@Model.addBook.Title" />
+
+    <br />
+
+    <label class="form-label" style="width:75px"> Price: </label>
+    <input class="form-text" asp-for="@Model.addBook.Price" />
+
+    <br />
+
+    <label class="form-label" style="width: 72px">Category</label>
+    <input class="dropdown" asp-for="@Model.addBook.CategoryId" . />
+
+    <br />
+
+    Image:
+    <input class="form-control" asp-for="@Model.addBook.Image" />
+
+    <br />
+
+    <input class="btn btn-primary" type="submit" value="Add Book" />
+
+</form>

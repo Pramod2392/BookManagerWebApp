@@ -1,13 +1,23 @@
 @page
-@model IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model BookManagerWeb.Pages.IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
 
-<div>API result</div>
-<div>@ViewData["ApiResult"]</div>
+<form method="post">
+    <input style="float:right" type="submit" class="btn btn-primary" value="Add Book" />
+</form>
+
+
+
+
+
+<div>
+    @foreach (var book in @Model.books)
+    {
+        <img id="book" src="data:image/jpg;base64, @book.Image" width="300" height="300" />
+    }
+
+</div>

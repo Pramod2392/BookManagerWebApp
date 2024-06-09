@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Identity.Web;
 using System.Net;
 using Microsoft.Identity.Abstractions;
+using BookManagerWeb.Models;
+using System.Text.Json;
+using System.ComponentModel;
 
 namespace BookManagerWeb.Pages
 {
@@ -12,29 +15,25 @@ namespace BookManagerWeb.Pages
         private readonly IDownstreamApi _downstreamApi;
         private readonly ILogger<IndexModel> _logger;
 
+        [BindProperty]
+        public List<Book>? books { get; set; }
+
         public IndexModel(ILogger<IndexModel> logger, IDownstreamApi downstreamApi)
         {
             _logger = logger;
             _downstreamApi = downstreamApi;;
         }
 
-        public async Task OnGet()
+        public async Task OnGetAsync()
         {
-            using var response = await _downstreamApi.CallApiForUserAsync("DownstreamApi").ConfigureAwait(false);
-
-            
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var apiResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                ViewData["ApiResult"] = apiResult;
-            }
-            else
-            {
-                var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}: {error}");
-            };
-
+            books = await _downstreamApi.GetForUserAsync<List<Book>>("DownstreamApiBook").ConfigureAwait(false);
         }
+
+        public void OnPost()
+        {
+            Response.Redirect("/AddBook");
+        }
+
+        
     }
 }
