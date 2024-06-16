@@ -27,31 +27,25 @@ namespace BookManagerWeb.Pages
 
 
         public async Task OnPostAsync()
-        {
-            //AddBook addBook = new AddBook() { Title = "The Monk who sold his Ferrari", Price = 200, CategoryId = 6 };
-            //using FileStream fileStream = new FileStream("./Images/the-monk-who-sold-his-ferrari-1000x1000.png", FileMode.Open);
-            //addBook.Image = new FormFile(fileStream, 0, fileStream.Length, "the-monk-who-sold-his-ferrari-1000x1000", "the-monk-who-sold-his-ferrari-1000x1000") { Headers = new HeaderDictionary(), ContentType = "image/png", ContentDisposition = "form-data; name=\"Image\"; filename=\"the-monk-who-sold-his-ferrari-1000x1000.png\"" };
+        {            
+            using MultipartFormDataContent content = new MultipartFormDataContent();
+            var addBookJson = JsonSerializer.Serialize(addBook);
 
-            //using MultipartFormDataContent content = new MultipartFormDataContent();
-            //var addBookJson = JsonSerializer.Serialize(addBook);
-
-            //await _downstreamApi.PostForUserAsync<string>("DownstreamApi", "");
-            ////_downstreamApi.
-            //using var response = await _downstreamApi.CallApiForUserAsync("DownstreamApi").ConfigureAwait(false);
+            await _downstreamApi.PostForUserAsync<string>("DownstreamApiBook", addBookJson);
+            //_downstreamApi.
+            using var response = await _downstreamApi.CallApiForUserAsync("DownstreamApiBook").ConfigureAwait(false);
 
 
-            //if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            //{
-            //    var apiResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            //    ViewData["ApiResult"] = apiResult;                
-            //}
-            //else
-            //{
-            //    var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            //    throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}: {error}");
-            //};
-
-            await Task.CompletedTask;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var apiResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                ViewData["ApiResult"] = apiResult;
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}: {error}");
+            };            
         }
     }
 }

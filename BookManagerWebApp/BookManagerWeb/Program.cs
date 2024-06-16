@@ -13,7 +13,7 @@ var initialScopes = builder.Configuration["DownstreamApi:Scopes"]?.Split(' ') ??
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
         .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
-            .AddDownstreamApi("DownstreamApi",builder.Configuration.GetSection("DownstreamApi"))
+            .AddDownstreamApi("DownstreamApiUser", builder.Configuration.GetSection("DownstreamApiUser"))
             .AddDownstreamApi("DownstreamApiBook", builder.Configuration.GetSection("DownstreamApiBook"))
             .AddInMemoryTokenCaches();
 
@@ -24,6 +24,7 @@ builder.Services.AddAuthorization(options =>
 });
 builder.Services.AddRazorPages()
     .AddMicrosoftIdentityUI();
+
 
 var app = builder.Build();
 
