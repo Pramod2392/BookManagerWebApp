@@ -67,7 +67,7 @@ namespace BookManagerWeb.Pages
                 }
                 
                 var requestJson = JsonSerializer.Serialize(user);
-                var response = await _downstreamApi.PostForUserAsync<User,ActionResult<User>>("DownstreamApiUser", user);
+                var response = await _downstreamApi.PostForUserAsync<User,User>("DownstreamApiUser", user);
             }
 
             //var claim = claims.Find(x => x.Type.ToString().Contains("newUser"));
