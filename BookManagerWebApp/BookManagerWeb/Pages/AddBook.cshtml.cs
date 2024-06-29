@@ -40,10 +40,12 @@ namespace BookManagerWeb.Pages
                     { "CategoryId", addBook.CategoryId.ToString() },
                     { "Price", addBook.Price.ToString() }
                 };
-                
-                var fileStream = new MemoryStream();
+
+                using var fileStream = new MemoryStream();
                 await addBook.Image.CopyToAsync(fileStream);
-                var streamContent = new StreamContent(fileStream);
+                fileStream.Position = 0;
+                var streamContent = new StreamContent(fileStream, Convert.ToInt32(addBook.Image.Length));
+
                 streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(addBook.Image.ContentType); // Change content type as per your image type
                 content.Add(streamContent, "Image", addBook.Image.FileName); // "image" is the key for the image data
 
@@ -61,6 +63,9 @@ namespace BookManagerWeb.Pages
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var apiResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                    // Display success message to user and navigate back to homw screen
+
                     ViewData["ApiResult"] = apiResult;
                 }
                 else
