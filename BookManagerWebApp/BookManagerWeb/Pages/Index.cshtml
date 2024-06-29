@@ -17,7 +17,7 @@
 <div>
     @foreach (var book in @Model.books)
     {
-        <img id="book" src="data:image/jpg;base64, @book.Image" width="300" height="300" />
+        <img id="book" src="data:image/jpg;base64, @Convert.ToBase64String(@book.Image)" width="300" height="300" />
     }
 
 </div>
