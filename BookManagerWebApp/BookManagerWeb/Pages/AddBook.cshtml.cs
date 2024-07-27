@@ -1,7 +1,9 @@
 using BookManagerWeb.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Abstractions;
 using System.ComponentModel;
 using System.Net.Http.Json;
@@ -19,11 +21,23 @@ namespace BookManagerWeb.Pages
             _logger = logger;
         }
 
-        [BindProperty()]
+        [BindProperty(SupportsGet = true)]
         public AddBook addBook { get; set; }
+
+        public SelectList Items { get; set; }
+
+        [BindProperty()]
+        public int SelectedItemId { get; set; } = 0;
         public async Task OnGetAsync()
         {
-            await Task.CompletedTask;
+            var categoryList = await _downstreamApi.GetForUserAsync<List<Category>>("DownstreamApiBook",
+                opts =>
+                {
+                    //opts.BaseUrl = "https://localhost:7264/api/Books";
+                    opts.RelativePath = "/GetCategories";
+                });
+            
+            Items = new SelectList(categoryList, "Id", "Name");
         }
 
 
@@ -31,6 +45,7 @@ namespace BookManagerWeb.Pages
         {
             try
             {
+                addBook.CategoryId = SelectedItemId;
                 using MultipartFormDataContent content = new MultipartFormDataContent();
                 var addBookJson = JsonSerializer.Serialize(addBook);
 
@@ -65,14 +80,15 @@ namespace BookManagerWeb.Pages
                     var apiResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                     // Display success message to user and navigate back to homw screen
-
-                    ViewData["ApiResult"] = apiResult;
+                  
                 }
                 else
                 {
                     var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}: {error}");
                 };
+
+                Response.Redirect("/Index");
             }
             catch (Exception ex)
             {

@@ -17,8 +17,9 @@
 
     <br />
 
-    <label class="form-label" style="width: 72px">Category</label>
-    <input class="dropdown" asp-for="@Model.addBook.CategoryId" . />
+    <label class="form-label" style="width: 72px">Category</label>    
+    <select asp-for="SelectedItemId" asp-items="Model.Items">
+    </select>
 
     <br />
 

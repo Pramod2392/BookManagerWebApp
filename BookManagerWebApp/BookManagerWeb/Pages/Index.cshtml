@@ -6,16 +6,25 @@
 }
 
 
+
+
 <form method="post">
     <input style="float:right" type="submit" class="btn btn-primary" value="Add Book" />
 </form>
 
+<br/>
+<br/>
 
+<form method="get" style="margin:1%">
+    @* <label asp-for="@Model.searchText">Search: </label> *@
+    <input type="text" style="line-height:2" class="text rounded" asp-for="@Model.searchText" />
+    <input type="submit" class="btn btn-secondary" title="Search" value="Search"  />
+</form>
 
 
 
 <div>
-    @foreach (var book in @Model.books)
+    @foreach (var book in @Model?.books)
     {
         <img id="book" src="data:image/jpg;base64, @Convert.ToBase64String(@book.Image)" width="300" height="300" />
     }

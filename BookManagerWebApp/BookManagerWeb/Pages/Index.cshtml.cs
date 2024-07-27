@@ -18,6 +18,9 @@ namespace BookManagerWeb.Pages
         [BindProperty]
         public List<Book>? books { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string searchText { get; set; } = string.Empty;
+
         public IndexModel(ILogger<IndexModel> logger, IDownstreamApi downstreamApi)
         {
             _logger = logger;
@@ -74,6 +77,14 @@ namespace BookManagerWeb.Pages
 
             // Get list of user books
             books = await _downstreamApi.GetForUserAsync<List<Book>>("DownstreamApiBook").ConfigureAwait(false);
+
+            // search for the books starting with or contains keyword
+
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                var searchTextLower = searchText.ToLower();
+                books = books?.Where(x => x.Title.ToLower().Contains(searchTextLower)).ToList(); 
+            }
         }
 
         public void OnPost()
