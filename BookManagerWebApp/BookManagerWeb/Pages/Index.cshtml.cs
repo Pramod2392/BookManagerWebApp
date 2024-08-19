@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace BookManagerWeb.Pages
 {
-    [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
+    [AuthorizeForScopes(ScopeKeySection = "DownstreamApiBook:Scopes")]
     public class IndexModel : PageModel
     {
         private readonly IDownstreamApi _downstreamApi;        
