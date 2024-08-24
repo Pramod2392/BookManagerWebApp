@@ -31,9 +31,10 @@ namespace BookManagerWeb.Pages
         {
             //Check if the user has logged in for the first time.
             // If yes, call user api and add the user to the table
-            var claims = HttpContext.User.Claims.ToList();            
 
-            
+            _logger.LogInformation("Inside OnGetAsync() method");
+
+            var claims = HttpContext.User.Claims.ToList();                        
 
             var isNewUser = claims.Find(x => x.Type.ToString().Contains("newUser"));
 
