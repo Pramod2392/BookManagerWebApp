@@ -14,10 +14,12 @@ namespace BookManagerWeb.Pages
     public class AddBookModel : PageModel
     {
         private readonly IDownstreamApi _downstreamApi;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<AddBookModel> _logger;
-        public AddBookModel(ILogger<AddBookModel> logger, IDownstreamApi downstreamApi)
+        public AddBookModel(ILogger<AddBookModel> logger, IDownstreamApi downstreamApi, IConfiguration configuration)
         {
             _downstreamApi = downstreamApi;
+            _configuration = configuration;
             _logger = logger;
         }
 
@@ -63,6 +65,7 @@ namespace BookManagerWeb.Pages
 
                 streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(addBook.Image.ContentType); // Change content type as per your image type
                 content.Add(streamContent, "Image", addBook.Image.FileName); // "image" is the key for the image data
+                var baseUrl = _configuration["DownstreamApiBook:BaseUrl"]?.ToString();
 
                 var response = await _downstreamApi.CallApiForUserAsync("DownstreamApiBook",
                             options =>
@@ -71,7 +74,7 @@ namespace BookManagerWeb.Pages
                                 options.CustomizeHttpRequestMessage = new Action<HttpRequestMessage>(x =>
                                 {
                                     x.Content = content;
-                                    x.RequestUri = new Uri($"https://localhost:7264/api/Books?Title={addBook.Title}&CategoryId={addBook.CategoryId}&Price={addBook.Price}");
+                                    x.RequestUri = new Uri($"{baseUrl}?Title={addBook.Title}&CategoryId={addBook.CategoryId}&Price={addBook.Price}");
                                 });                                
                             });
 
