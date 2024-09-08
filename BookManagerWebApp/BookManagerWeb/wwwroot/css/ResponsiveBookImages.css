@@ -1,0 +1,25 @@
+﻿.custom-img {
+    width: 100%;
+    height: auto;
+}
+
+@media (min-width: 576px) {
+    .custom-img {
+        width: 75%;
+        height: 200px;
+    }
+}
+
+@media (min-width: 768px) {
+    .custom-img {
+        width: 50%;
+        height: 300px;
+    }
+}
+
+@media (min-width: 992px) {
+    .custom-img {
+        width: 25%;
+        height: 400px;
+    }
+}
