@@ -1,4 +1,4 @@
-@page
+@page "{pageNumber:int?}"
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model BookManagerWeb.Pages.IndexModel
 @{
@@ -14,7 +14,7 @@
 
 
 
-<form method="post">
+<form method="post" style="margin:1%">
     <input style="float:right" type="submit" class="btn btn-primary" value="Add Book" />
 </form>
 
@@ -30,9 +30,27 @@
 
 
 <div>
-    @foreach (var book in @Model?.books)
+    @foreach (var book in @Model?.pagedBooks?.Books)
     {
         <img id="book" src="data:image/jpg;base64, @Convert.ToBase64String(@book.Image)" alt="Responsive image with dynamic width and height" class="custom-img" />
+    }    
+
+</div>
+
+<div style="margin:1%">
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
     }
 
+    <a asp-page="./Index"
+       asp-route-pageNumber="@(Model.PageNumber - 1)"
+       class="btn btn-link @prevDisabled">
+        Previous
+    </a>
+    <a asp-page="./Index"
+       asp-route-pageNumber="@(Model.PageNumber + 1)"
+       class="btn btn-link @nextDisabled">
+        Next
+    </a>
 </div>

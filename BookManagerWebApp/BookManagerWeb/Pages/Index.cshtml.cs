@@ -12,27 +12,37 @@ namespace BookManagerWeb.Pages
     [AuthorizeForScopes(ScopeKeySection = "DownstreamApiBook:Scopes")]
     public class IndexModel : PageModel
     {
-        private readonly IDownstreamApi _downstreamApi;        
+        private readonly IDownstreamApi _downstreamApi;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<IndexModel> _logger;
 
         [BindProperty]
-        public List<Book>? books { get; set; }
+        public PagedBook? pagedBooks { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string searchText { get; set; } = string.Empty;
 
-        public IndexModel(ILogger<IndexModel> logger, IDownstreamApi downstreamApi)
+        public int PageNumber = 1;
+        public int PageSize = 3;
+        public int TotalNumberOfBooks { get; set; }
+        public bool HasPreviousPage;
+        public bool HasNextPage;        
+
+        public IndexModel(ILogger<IndexModel> logger, IDownstreamApi downstreamApi, IConfiguration configuration)
         {
             _logger = logger;
-            _downstreamApi = downstreamApi;                        
+            _downstreamApi = downstreamApi;
+            this._configuration = configuration;
         }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? pageNumber)
         {
             //Check if the user has logged in for the first time.
             // If yes, call user api and add the user to the table
 
             _logger.LogInformation("Inside OnGetAsync() method");
+
+            int pageNo = Convert.ToInt32(pageNumber);
 
             var claims = HttpContext.User.Claims.ToList();                        
 
@@ -72,20 +82,27 @@ namespace BookManagerWeb.Pages
                 
                 var requestJson = JsonSerializer.Serialize(user);
                 var response = await _downstreamApi.PostForUserAsync<User,User>("DownstreamApiUser", user);
-            }
+            }            
 
             //var claim = claims.Find(x => x.Type.ToString().Contains("newUser"));
-
-            // Get list of user books
-            books = await _downstreamApi.GetForUserAsync<List<Book>>("DownstreamApiBook").ConfigureAwait(false);
-
-            // search for the books starting with or contains keyword
-
-            if (!string.IsNullOrWhiteSpace(searchText))
+            if (pageNo >= 1)
             {
-                var searchTextLower = searchText.ToLower();
-                books = books?.Where(x => x.Title.ToLower().Contains(searchTextLower)).ToList(); 
+                this.PageNumber = pageNo;
             }
+            
+            var baseUrl = _configuration["DownstreamApiBook:BaseUrl"]?.ToString();
+            // Get list of user books
+            pagedBooks = await _downstreamApi.GetForUserAsync<PagedBook>("DownstreamApiBook",
+                                    options =>
+                                    {
+                                        options.CustomizeHttpRequestMessage = new Action<HttpRequestMessage>(x =>
+                                        {
+                                            x.RequestUri = new Uri($"{baseUrl}?PageSize={PageSize}&PageNumber={this.PageNumber}&searchText={searchText}");
+                                        });
+                                    });
+
+            HasNextPage = (int)Math.Ceiling((double)pagedBooks?.TotalCount / PageSize) > PageNumber ?  true : false;
+            HasPreviousPage = PageNumber > 1 ? true : false;
         }
 
         public void OnPost()
