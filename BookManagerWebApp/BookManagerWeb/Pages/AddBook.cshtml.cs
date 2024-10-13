@@ -26,10 +26,15 @@ namespace BookManagerWeb.Pages
         [BindProperty(SupportsGet = true)]
         public AddBook addBook { get; set; }
 
-        public SelectList Items { get; set; }
+        public SelectList CategoryItems { get; set; }
+
+        public SelectList LanguageItems { get; set; }
 
         [BindProperty()]
-        public int SelectedItemId { get; set; } = 0;
+        public int CategorySelectedItemId { get; set; } = 0;
+
+        [BindProperty()]
+        public int LanguageSelectedItemId { get; set; } = 0;
         public async Task OnGetAsync()
         {
             var categoryList = await _downstreamApi.GetForUserAsync<List<Category>>("DownstreamApiBook",
@@ -39,7 +44,16 @@ namespace BookManagerWeb.Pages
                     opts.RelativePath = "/GetCategories";
                 });
             
-            Items = new SelectList(categoryList, "Id", "Name");
+            CategoryItems = new SelectList(categoryList, "Id", "Name");
+
+            var languageList = await _downstreamApi.GetForUserAsync<List<Language>>("DownstreamApiBook",
+                opts =>
+                {
+                    //opts.BaseUrl = "https://localhost:7264/api/Books";
+                    opts.RelativePath = "/GetLanguages";
+                });
+
+            LanguageItems = new SelectList(languageList, "Id", "Name");
         }
 
 
@@ -47,7 +61,8 @@ namespace BookManagerWeb.Pages
         {
             try
             {
-                addBook.CategoryId = SelectedItemId;
+                addBook.CategoryId = CategorySelectedItemId;
+                addBook.LanguageId = LanguageSelectedItemId;
                 using MultipartFormDataContent content = new MultipartFormDataContent();
                 var addBookJson = JsonSerializer.Serialize(addBook);
 
@@ -55,7 +70,8 @@ namespace BookManagerWeb.Pages
                 {
                     { "Title", addBook.Title },
                     { "CategoryId", addBook.CategoryId.ToString() },
-                    { "Price", addBook.Price.ToString() }
+                    { "Price", addBook.Price.ToString() },
+                    { "LanguageId", addBook.LanguageId.ToString() }
                 };
 
                 using var fileStream = new MemoryStream();
@@ -74,7 +90,7 @@ namespace BookManagerWeb.Pages
                                 options.CustomizeHttpRequestMessage = new Action<HttpRequestMessage>(x =>
                                 {
                                     x.Content = content;
-                                    x.RequestUri = new Uri($"{baseUrl}?Title={addBook.Title}&CategoryId={addBook.CategoryId}&Price={addBook.Price}");
+                                    x.RequestUri = new Uri($"{baseUrl}?Title={addBook.Title}&CategoryId={addBook.CategoryId}&Price={addBook.Price}&LanguageId={addBook.LanguageId}");
                                 });                                
                             });
 
