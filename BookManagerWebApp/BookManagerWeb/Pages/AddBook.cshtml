@@ -18,7 +18,13 @@
     <br />
 
     <label class="form-label" style="width: 72px">Category</label>    
-    <select asp-for="SelectedItemId" asp-items="Model.Items">
+    <select asp-for="CategorySelectedItemId" asp-items="Model.CategoryItems">
+    </select>
+
+    <br />
+
+    <label class="form-label" style="width: 72px">Language</label>
+    <select asp-for="LanguageSelectedItemId" asp-items="Model.LanguageItems">
     </select>
 
     <br />
