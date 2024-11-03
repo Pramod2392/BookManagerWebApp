@@ -1,0 +1,81 @@
+﻿@page
+@model BookManagerWeb.Pages.ScanBookModel
+@{
+}
+
+<h2>Scan ISBN Code</h2>
+
+<div id="interactive" class="viewport"></div>
+<p id="isbnResult"></p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
+<script>
+    let lastScannedISBN = null;
+    let scanCount = 0;
+    const scanThreshold = 3; // Require the same ISBN to be detected 3 times in a row
+
+    // Initialize QuaggaJS to scan EAN-13 (ISBN)
+    Quagga.init({
+        inputStream: {
+            type: "LiveStream",
+            target: document.querySelector('#interactive'),
+            constraints: {
+                width: 640,
+                height: 480,
+                facingMode: "environment" // Rear camera
+            }
+        },
+        decoder: {
+            readers: ["ean_reader"/*,  "ean_8_reader", "code_128_reader" */] // EAN-13 for ISBNs
+        }
+    }, function (err) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        Quagga.start();
+    });
+
+    Quagga.onDetected(function (result) {
+        var isbn = result.codeResult.code;
+
+        // Check if this is the same value as last time
+        if (isbn.length == 13 && isbn.charAt(0) == '9')
+        {
+            if (isbn === lastScannedISBN) {
+                scanCount++;
+            } else {
+                lastScannedISBN = isbn;
+                scanCount = 1;
+            }
+        }
+
+
+        // Confirm the scan only if the same ISBN is detected multiple times
+        if (scanCount >= scanThreshold) {
+            Quagga.stop(); // Stop scanning once we have a stable result
+            document.getElementById("isbnResult").textContent = "Scanned ISBN: " + isbn;
+            sendIsbnToApi(isbn);
+        }
+    });
+
+    function sendIsbnToApi(isbn) {
+        fetch('@Url.Page("/ScanBook", "OnPost")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ isbn: isbn })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('ISBN successfully sent.');
+                } else {
+                    console.log('Error sending ISBN.');
+                }
+            })
+            .catch((error) => console.error('Error:', error));
+    }
+</script>
