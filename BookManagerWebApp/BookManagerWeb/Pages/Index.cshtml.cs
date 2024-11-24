@@ -107,7 +107,7 @@ namespace BookManagerWeb.Pages
 
         public void OnPost()
         {
-            Response.Redirect("/AddBook");
+            Response.Redirect("/ScanBook");
         }
 
         

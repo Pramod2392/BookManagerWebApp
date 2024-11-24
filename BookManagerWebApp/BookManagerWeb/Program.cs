@@ -17,6 +17,18 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddDownstreamApi("DownstreamApiBook", builder.Configuration.GetSection("DownstreamApiBook"))
             .AddInMemoryTokenCaches();
 
+builder.Services.AddHttpClient("GoogleBookManagerApiClient",
+                        x =>
+                        {
+                            x.BaseAddress = new Uri(builder?.Configuration?.GetValue<string>("GoogleBookAPI:BaseUrl"));
+                        });
+
+builder.Services.AddHttpClient("GoogleBookImageAPIClient",
+                        x =>
+                        {
+                            x.BaseAddress = new Uri(builder?.Configuration?.GetValue<string>("GoogleBookAPI:ImageAPIBaseURL"));
+                        });
+
 builder.Services.AddAuthorization(options =>
 {
     // By default, all incoming requests will be authorized according to the default policy.
