@@ -1,4 +1,5 @@
 ﻿@page
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @model BookManagerWeb.Pages.ScanBookModel
 @{
 }
@@ -6,7 +7,33 @@
 <h2>Scan ISBN Code</h2>
 
 <div id="interactive" class="viewport"></div>
-<p id="isbnResult"></p>
+
+
+<div id="popup" style="display: none;">
+    <label class="form-label">ISBN: </label>
+    <input type="text" disabled="disabled" id="popupIsbn" class="text text-secondary" />
+    <br />
+
+    <label class="form-label">Title: </label>
+    <input type="text" disabled="disabled" id="popupTitle" class="text text-primary" />
+    <br />
+
+    <input type="text" disabled="disabled" id="bookTitle" class="text text-primary" />
+    <br />
+
+    <input type="text" disabled="disabled" id="bookISBN" class="text text-primary" />
+    <br />
+
+    <img id="popupImage" />
+    <br />
+
+    <button class="btn btn-primary" onclick="AddNewBook()">Add Book</button>
+    <button class="btn-close" onclick="closePopup()">Close</button>
+</div>
+
+<form>
+    <input name="__RequestVerificationToken" type="hidden" value="@Antiforgery.GetTokens(HttpContext).RequestToken" />
+</form>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 
@@ -55,14 +82,17 @@
         // Confirm the scan only if the same ISBN is detected multiple times
         if (scanCount >= scanThreshold) {
             Quagga.stop(); // Stop scanning once we have a stable result
-            document.getElementById("isbnResult").textContent = "Scanned ISBN: " + isbn;
-            sendIsbnToApi(isbn);
+
+            fetchData(isbn);
+
+            
+            // sendIsbnToApi(isbn);
         }
     });
 
     function sendIsbnToApi(isbn) {
         fetch('@Url.Page("/ScanBook", "OnPost")', {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -78,4 +108,54 @@
             })
             .catch((error) => console.error('Error:', error));
     }
+
+
+    // window.onload = function () {
+    //     fetchData();
+    // };
+
+    function fetchData(isbn) {
+        fetch('@Url.Page("/ScanBook", "Data")')
+            .then(response => response.json())
+            .then(data => {
+
+                document.getElementById("popupIsbn").value = "Scanned ISBN: " + isbn;                
+                document.getElementById("popupTitle").value = "Title: " + data.title;
+                document.getElementById("popupImage").src = data.imageSource;
+                document.getElementById("popup").style.display = "block";
+                document.getElementById("interactive").style.display = "none";
+
+                document.getElementById("bookTitle").value = data.title;
+                document.getElementById("bookISBN").value = isbn;
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function AddNewBook() {
+        // const url = `/?handler=OnPostAsync`;
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        fetch(`@Url.Page("/ScanBook")`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify({ isbn: document.getElementById("bookISBN").value, title: document.getElementById("bookTitle").value, imageSource: document.getElementById("popupImage").src })
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            });
+        // .then(response => response.json())
+        // .then(data => {
+        //     if (data.url) {
+        //         window.location.href = data.url; // Redirect to the specified URL
+        //     });
+    }
+
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+    }
+
 </script>

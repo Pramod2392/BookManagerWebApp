@@ -30,12 +30,14 @@ namespace BookManagerWeb.Pages
 
         public SelectList LanguageItems { get; set; }
 
+        public string ImageURL {  get; set; }
+
         [BindProperty()]
         public int CategorySelectedItemId { get; set; } = 0;
 
         [BindProperty()]
         public int LanguageSelectedItemId { get; set; } = 0;
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string Title, string ImageUrl)
         {
             var categoryList = await _downstreamApi.GetForUserAsync<List<Category>>("DownstreamApiBook",
                 opts =>
@@ -54,6 +56,9 @@ namespace BookManagerWeb.Pages
                 });
 
             LanguageItems = new SelectList(languageList, "Id", "Name");
+
+            addBook.Title = Title;
+            ImageURL = ImageUrl;
         }
 
 

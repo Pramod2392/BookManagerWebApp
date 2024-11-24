@@ -29,53 +29,24 @@ namespace BookManagerWeb.Pages
         {
         }
 
-        public async Task<IActionResult> OnPostAsync([FromBody] ScanBook request)
+        public async Task<IActionResult> OnPostAsync([FromBody] AddNewBookRequest request)
         {
-            if (string.IsNullOrEmpty(request.ISBN))
+            if (string.IsNullOrEmpty(request.isbn))
             {
                 return BadRequest(new { success = false, message = "Invalid ISBN" });
             }
 
             //
-            bool isValid = IsValidISBN(request.ISBN);
+            bool isValid = IsValidISBN(request.isbn);
 
             if (!isValid)
             {
                 return BadRequest(new { success = false, message = "Invalid ISBN: Please try again." });
             }
 
-            // Call Google Book API to get the details
-            string apiKey = Convert.ToString(_configuration?["BookAPI:APIKey"]);
-            string volumeUri = Convert.ToString(_configuration?["VolumeQueryUrl"]);
-            string uri = $"{volumeUri}?q=isbn:{request.ISBN}";
-
-            var response = await _httpClientGoogleManagerApiClient.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
-            {
-                var responseString = await response.Content.ReadAsStringAsync();
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                var deserializedObject = JsonSerializer.Deserialize<GoogleBookAPIResponseModel>(responseString, options);                
-
-                string imageURI = deserializedObject?.Items[0]?.VolumeInfo?.ImageLinks?.Thumbnail;
-
-                if (!string.IsNullOrWhiteSpace(imageURI))
-                {
-                    var imageDataResponse = await _httpClientGoogleBookImageApiClient.GetAsync(imageURI);
-
-                    if (imageDataResponse.IsSuccessStatusCode)
-                    {
-                        var imageData = await imageDataResponse.Content.ReadAsStringAsync();
-                    }
-                }
-            }
-
-            await Task.CompletedTask;
-            return new OkObjectResult(isValid);
+            // Navigate to Add New Book page with the model data
+            return RedirectToPage("/AddBook", new { Title = request.title, ImageUrl = request.imageSource });
         }
-
 
         public bool IsValidISBN(string isbn)
         {
@@ -86,7 +57,7 @@ namespace BookManagerWeb.Pages
             if (isbn.Length == 13)
             {
                 return IsValidISBN13(isbn);
-            }            
+            }
             else
             {
                 // Invalid if it doesn't match ISBN-10 or ISBN-13 length
@@ -120,5 +91,43 @@ namespace BookManagerWeb.Pages
             // Compare the calculated check digit with the 13th digit
             return checkDigit == int.Parse(isbn[12].ToString());
         }
+
+
+        public async Task<JsonResult> OnGetData(string isbn)
+        {
+            GoogleBookAPIResponseModel output = new();
+            string apiKey = Convert.ToString(_configuration?["GoogleBookAPI:APIKey"]);
+            //string isbn = "9789355431356";
+            string uri = $"books/v1/volumes?q=isbn:{isbn}&key={apiKey}";
+            var response = await _httpClientGoogleManagerApiClient.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                var deserializedObject = JsonSerializer.Deserialize<GoogleBookAPIResponseModel>(responseString, options);
+                output = deserializedObject;
+
+                string ImageURI = deserializedObject?.Items[0]?.VolumeInfo?.ImageLinks?.Thumbnail;
+                
+                // Redirect to another page with query string parameters
+                string Title = output.Items[0].VolumeInfo.Title;
+
+                var data = new { Title = Title, ImageSource = ImageURI };
+                return new JsonResult(data);                
+            }
+            return new JsonResult(output);
+            // Redirect to another page with query string parameters
+            //Response.Redirect("/Popup");
+        }
+    }
+
+    public class AddNewBookRequest
+    {
+        public string isbn { set; get; }
+        public string title { get; set; }
+        public string imageSource { get; set; } = string.Empty;
     }
 }
