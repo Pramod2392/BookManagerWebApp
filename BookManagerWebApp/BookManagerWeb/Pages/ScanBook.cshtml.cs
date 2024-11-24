@@ -118,9 +118,7 @@ namespace BookManagerWeb.Pages
                 var data = new { Title = Title, ImageSource = ImageURI };
                 return new JsonResult(data);                
             }
-            return new JsonResult(output);
-            // Redirect to another page with query string parameters
-            //Response.Redirect("/Popup");
+            return new JsonResult(output);            
         }
     }
 
