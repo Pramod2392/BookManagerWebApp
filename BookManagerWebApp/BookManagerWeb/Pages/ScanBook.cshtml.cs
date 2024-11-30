@@ -97,6 +97,8 @@ namespace BookManagerWeb.Pages
         {
             GoogleBookAPIResponseModel output = new();
             string apiKey = Convert.ToString(_configuration?["GoogleBookAPI:APIKey"]);
+            string ImageURI = string.Empty;
+            string Title = string.Empty;
             //string isbn = "9789355431356";
             string uri = $"books/v1/volumes?q=isbn:{isbn}&key={apiKey}";
             var response = await _httpClientGoogleManagerApiClient.GetAsync(uri);
@@ -110,10 +112,11 @@ namespace BookManagerWeb.Pages
                 var deserializedObject = JsonSerializer.Deserialize<GoogleBookAPIResponseModel>(responseString, options);
                 output = deserializedObject;
 
-                string ImageURI = deserializedObject?.Items[0]?.VolumeInfo?.ImageLinks?.Thumbnail;
-                
-                // Redirect to another page with query string parameters
-                string Title = output.Items[0].VolumeInfo.Title;
+                if (deserializedObject.Items != null)
+                {
+                    ImageURI = deserializedObject?.Items[0]?.VolumeInfo?.ImageLinks?.Thumbnail;
+                    Title = output?.Items[0]?.VolumeInfo?.Title;
+                }
 
                 var data = new { Title = Title, ImageSource = ImageURI };
                 return new JsonResult(data);                
