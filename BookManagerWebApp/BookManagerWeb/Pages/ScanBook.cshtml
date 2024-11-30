@@ -8,6 +8,11 @@
 
 <div id="interactive" class="viewport"></div>
 
+<div id="errorLable" style="display:none;">
+    <p>Unable to scan the isbn</p>
+    <button class="btn btn-primary" onclick="redirectToPage()">Add Book Manually</button>
+</div>
+
 
 <div id="popup" style="display: none;">
     <label class="form-label">ISBN: </label>
@@ -62,6 +67,7 @@
             return;
         }
         Quagga.start();
+        setTimeout(ExecuteAddBookManuallyCase, 60000);
     });
 
     Quagga.onDetected(function (result) {
@@ -157,6 +163,17 @@
 
     function closePopup() {
         document.getElementById("popup").style.display = "none";
+    }
+
+    function ExecuteAddBookManuallyCase() {
+
+        document.getElementById("interactive").style.display = "none";
+        document.getElementById("popup").style.display = "none";
+        document.getElementById("errorLable").style.display = "block";
+    }
+
+    function redirectToPage() {
+        window.location.href = "/AddBook"; // Replace 'TargetPage' with the desired page path
     }
 
 </script>
