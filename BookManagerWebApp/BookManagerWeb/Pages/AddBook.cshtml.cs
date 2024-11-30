@@ -31,6 +31,7 @@ namespace BookManagerWeb.Pages
 
         public SelectList LanguageItems { get; set; }
 
+        [BindProperty(SupportsGet = true)]
         public string ImageURL {  get; set; }
 
         [BindProperty()]
