@@ -8,6 +8,7 @@ using Microsoft.Identity.Abstractions;
 using System.ComponentModel;
 using System.Net.Http.Json;
 using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BookManagerWeb.Pages
 {
@@ -80,6 +81,18 @@ namespace BookManagerWeb.Pages
                 };
 
                 using var fileStream = new MemoryStream();
+
+                if (!string.IsNullOrWhiteSpace(ImageURL))
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var imageBytes = client.GetByteArrayAsync(ImageURL).Result;
+
+                        var stream = new MemoryStream(imageBytes);
+                        addBook.Image = new FormFile(stream, 0, imageBytes.Length, "ImageFile", "filename.jpg");
+                    }
+                }
+
                 await addBook.Image.CopyToAsync(fileStream);
                 fileStream.Position = 0;
                 var streamContent = new StreamContent(fileStream, Convert.ToInt32(addBook.Image.Length));

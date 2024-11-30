@@ -33,7 +33,8 @@
     
     @if(!string.IsNullOrWhiteSpace(@Model.ImageURL))
     {
-        <input class="form-control" asp-for="@Model.addBook.Image" src="@Model.ImageURL" />
+        <img src="@Model.ImageURL" />
+        @* <input class="form-control" asp-for="@Model.addBook.Image" src="@Model.ImageURL" /> *@
     }
     else
     {
