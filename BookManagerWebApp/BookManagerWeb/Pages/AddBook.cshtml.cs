@@ -90,10 +90,11 @@ namespace BookManagerWeb.Pages
                         var imageBytes = client.GetByteArrayAsync(ImageURL).Result;
 
                         var stream = new MemoryStream(imageBytes);
-                        addBook.Image = new FormFile(stream, 0, imageBytes.Length, "ImageFile", "filename.jpg") 
-                                                { 
-                                                    ContentType = "image/jpeg"
-                                                };
+                        addBook.Image = new FormFile(stream, 0, imageBytes.Length, "ImageFile", "filename.jpeg") 
+                                            {
+                                               Headers = new HeaderDictionary(),
+                                               ContentType = "image/jpeg"
+                                             };
                     }
                 }
 
