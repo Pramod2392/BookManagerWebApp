@@ -39,6 +39,9 @@ namespace BookManagerWeb.Pages
 
         [BindProperty()]
         public int LanguageSelectedItemId { get; set; } = 0;
+
+        [BindProperty()]
+        public string ErrorMessage { get; set; } = string.Empty;
         public async Task OnGetAsync(string Title, string ImageUrl)
         {
             var categoryList = await _downstreamApi.GetForUserAsync<List<Category>>("DownstreamApiBook",
@@ -122,13 +125,20 @@ namespace BookManagerWeb.Pages
                     var apiResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                     // Display success message to user and navigate back to homw screen
-                  
+
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    ErrorMessage = "Book already exists";
+                    _logger.LogInformation("The book already exists");
                 }
                 else
                 {
                     var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}: {error}");
-                };
+                }
+                
+;
 
                 Response.Redirect("/Index");
             }
