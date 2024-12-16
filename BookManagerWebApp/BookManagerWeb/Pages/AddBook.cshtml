@@ -9,6 +9,7 @@
 
     <label class="form-label" style="width: 75px"> Name: </label>
     <input class="form-text tab" asp-for="@Model.addBook.Title" />
+    <input class="form-text alert-danger" asp-for="@Model.ErrorMessage" id="errorMessageText"/>
 
     <br />
 
