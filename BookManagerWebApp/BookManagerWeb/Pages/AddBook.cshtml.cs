@@ -8,6 +8,7 @@ using Microsoft.Identity.Abstractions;
 using System.ComponentModel;
 using System.Net.Http.Json;
 using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BookManagerWeb.Pages
 {
@@ -30,6 +31,9 @@ namespace BookManagerWeb.Pages
 
         public SelectList LanguageItems { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string ImageURL {  get; set; }
+
         [BindProperty()]
         public int CategorySelectedItemId { get; set; } = 0;
 
@@ -38,7 +42,7 @@ namespace BookManagerWeb.Pages
 
         [BindProperty()]
         public string ErrorMessage { get; set; } = string.Empty;
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string Title, string ImageUrl)
         {
             var categoryList = await _downstreamApi.GetForUserAsync<List<Category>>("DownstreamApiBook",
                 opts =>
@@ -57,6 +61,9 @@ namespace BookManagerWeb.Pages
                 });
 
             LanguageItems = new SelectList(languageList, "Id", "Name");
+
+            addBook.Title = Title;
+            ImageURL = ImageUrl;
         }
 
 
@@ -78,6 +85,22 @@ namespace BookManagerWeb.Pages
                 };
 
                 using var fileStream = new MemoryStream();
+
+                if (!string.IsNullOrWhiteSpace(ImageURL))
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var imageBytes = client.GetByteArrayAsync(ImageURL).Result;
+
+                        var stream = new MemoryStream(imageBytes);
+                        addBook.Image = new FormFile(stream, 0, imageBytes.Length, "ImageFile", $"{addBook.Title}.jpeg") 
+                                            {
+                                               Headers = new HeaderDictionary(),
+                                               ContentType = "image/jpeg"
+                                             };
+                    }
+                }
+
                 await addBook.Image.CopyToAsync(fileStream);
                 fileStream.Position = 0;
                 var streamContent = new StreamContent(fileStream, Convert.ToInt32(addBook.Image.Length));
