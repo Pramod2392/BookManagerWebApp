@@ -7,26 +7,34 @@
 
 <form method="post" enctype="multipart/form-data">
 
-    <label class="form-label" style="width: 75px"> Name: </label>
-    <input class="form-text tab" asp-for="@Model.addBook.Title" />
-    <input class="form-text alert-danger" asp-for="@Model.ErrorMessage" id="errorMessageText"/>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <br />
+    <div class="form-group">
+        <label class="form-label" style="width: 75px" asp-for="addBook.Title"/>
+        <input class="form-text tab" asp-for="addBook.Title" />
+        <span asp-validation-for="addBook.Title" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group>">
+        <label class="form-label" style="width:75px" asp-for="addBook.Price" />
+        <input class="form-text" asp-for="addBook.Price" />
+    </div>
 
-    <label class="form-label" style="width:75px"> Price: </label>
-    <input class="form-text" asp-for="@Model.addBook.Price" />
+    <div class="form-group">
+        <label class="form-label" style="width: 72px" asp-for="@Model.CategoryItems"/>
+        <select asp-for="CategorySelectedItemId" asp-items="Model.CategoryItems">
+        </select>
+    </div>
 
-    <br />
+    
 
-    <label class="form-label" style="width: 72px">Category</label>    
-    <select asp-for="CategorySelectedItemId" asp-items="Model.CategoryItems">
-    </select>
+    <div class="form-group">
+        <label class="form-label" style="width: 72px" asp-for="@Model.LanguageItems"/>
+        <select asp-for="LanguageSelectedItemId" asp-items="Model.LanguageItems">
+        </select>
+    </div>
 
-    <br />
-
-    <label class="form-label" style="width: 72px">Language</label>
-    <select asp-for="LanguageSelectedItemId" asp-items="Model.LanguageItems">
-    </select>
+    
 
     <br />
 
