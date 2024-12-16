@@ -129,8 +129,12 @@ namespace BookManagerWeb.Pages
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                 {
-                    ErrorMessage = "Book already exists";
+                    ModelState.AddModelError("addBook.Title", "This book already exists.");
                     _logger.LogInformation("The book already exists");
+                    if (!ModelState.IsValid)
+                    {
+                        return;
+                    }
                 }
                 else
                 {
