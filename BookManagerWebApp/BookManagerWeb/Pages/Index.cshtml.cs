@@ -114,6 +114,22 @@ namespace BookManagerWeb.Pages
             Response.Redirect("/ScanBook");
         }
 
-        
+        public async Task OnGetSearch()
+        {
+            this.PageNumber = 1;
+            var baseUrl = _configuration["DownstreamApiBook:BaseUrl"]?.ToString();
+            // Get list of user books
+            pagedBooks = await _downstreamApi.GetForUserAsync<PagedBook>("DownstreamApiBook",
+                                    options =>
+                                    {
+                                        options.CustomizeHttpRequestMessage = new Action<HttpRequestMessage>(x =>
+                                        {
+                                            x.RequestUri = new Uri($"{baseUrl}?PageSize={PageSize}&PageNumber={this.PageNumber}&searchText={searchText}");
+                                        });
+                                    });
+
+            HasNextPage = (int)Math.Ceiling((double)pagedBooks?.TotalCount / PageSize) > PageNumber ? true : false;
+            HasPreviousPage = PageNumber > 1 ? true : false;
+        }
     }
 }
