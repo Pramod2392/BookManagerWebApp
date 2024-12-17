@@ -89,6 +89,10 @@ namespace BookManagerWeb.Pages
             {
                 this.PageNumber = pageNo;
             }
+            else
+            {
+                this.PageNumber = 1;
+            }
             
             var baseUrl = _configuration["DownstreamApiBook:BaseUrl"]?.ToString();
             // Get list of user books
