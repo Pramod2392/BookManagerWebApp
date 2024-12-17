@@ -10,18 +10,18 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="form-group">
-        <label class="form-label" style="width: 75px" asp-for="addBook.Title"/>
+        <label style="width: 75px" asp-for="addBook.Title">Title</label>
         <input class="form-control" asp-for="addBook.Title" />
         <span asp-validation-for="addBook.Title" class="text-danger"></span>
     </div>
     
     <div class="form-group>">
-        <label class="form-label" style="width:75px" asp-for="addBook.Price" />
+        <label style="width:75px" asp-for="addBook.Price">Price</label>
         <input class="form-control" asp-for="addBook.Price" />
     </div>
 
     <div class="form-group">
-        <label class="form-label" style="width: 72px" asp-for="@Model.CategoryItems"/>
+        <label style="width: 72px" asp-for="@Model.CategoryItems">Category</label>
         <select class="form-control" asp-for="CategorySelectedItemId" asp-items="Model.CategoryItems">
         </select>
     </div>
@@ -29,7 +29,7 @@
     
 
     <div class="form-group">
-        <label class="form-label" style="width: 72px" asp-for="@Model.LanguageItems"/>
+        <label style="width: 72px" asp-for="@Model.LanguageItems">Language</label>
         <select class="form-control" asp-for="LanguageSelectedItemId" asp-items="Model.LanguageItems">
         </select>
     </div>
