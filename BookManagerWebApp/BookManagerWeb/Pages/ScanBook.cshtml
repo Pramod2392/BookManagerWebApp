@@ -24,6 +24,10 @@
     <input type="text" disabled="disabled" id="bookISBN" class="text text-primary" />
     <br />
 
+    <label class="form-label">Language: </label>
+    <input type="text" disabled="disabled" id="bookLanguage" class="text text-primary" />
+    <br />
+
     <img id="popupImage" />
     <br />
 
@@ -126,6 +130,7 @@
                 
                 document.getElementById("bookTitle").value = data.title;
                 document.getElementById("bookISBN").value = isbn;
+                document.getElementById("bookLanguage").value = data.Language;
             })
             .catch(error => console.error('Error fetching data:', error));
     }
@@ -139,7 +144,7 @@
                 'Content-Type': 'application/json',
                 'RequestVerificationToken': token
             },
-            body: JSON.stringify({ isbn: document.getElementById("bookISBN").value, title: document.getElementById("bookTitle").value, imageSource: document.getElementById("popupImage").src })
+            body: JSON.stringify({ isbn: document.getElementById("bookISBN").value, title: document.getElementById("bookTitle").value, imageSource: document.getElementById("popupImage").src, language: document.getElementById("bookLanguage").value })
         })
             .then(response => {
                 if (response.redirected) {

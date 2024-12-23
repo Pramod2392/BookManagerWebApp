@@ -42,7 +42,7 @@ namespace BookManagerWeb.Pages
 
         [BindProperty()]
         public string ErrorMessage { get; set; } = string.Empty;
-        public async Task OnGetAsync(string Title, string ImageUrl)
+        public async Task OnGetAsync(string Title, string ImageUrl, string Language)
         {
             var categoryList = await _downstreamApi.GetForUserAsync<List<Category>>("DownstreamApiBook",
                 opts =>
@@ -64,6 +64,11 @@ namespace BookManagerWeb.Pages
 
             addBook.Title = Title;
             ImageURL = ImageUrl;
+
+            if (string.Equals(Language, "en", StringComparison.OrdinalIgnoreCase))
+            {
+                CategorySelectedItemId = (languageList == null) ? 0 : languageList.SingleOrDefault(x => x.Name.Equals("English", StringComparison.OrdinalIgnoreCase)).Id;
+            }
         }
 
 
