@@ -67,7 +67,7 @@ namespace BookManagerWeb.Pages
 
             if (string.Equals(Language, "en", StringComparison.OrdinalIgnoreCase))
             {
-                CategorySelectedItemId = (languageList == null) ? 0 : languageList.SingleOrDefault(x => x.Name.Equals("English", StringComparison.OrdinalIgnoreCase)).Id;
+                LanguageSelectedItemId = (languageList == null) ? 0 : languageList.SingleOrDefault(x => x.Name.Equals("English", StringComparison.OrdinalIgnoreCase)).Id;
             }
         }
 
