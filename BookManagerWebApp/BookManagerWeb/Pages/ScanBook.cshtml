@@ -126,8 +126,8 @@
             .then(response => response.json())
             .then(data => {
 
-                document.getElementById("popupIsbn").value = "Scanned ISBN: " + isbn;
-                document.getElementById("popupTitle").value = "Title: " + data.title;
+                document.getElementById("popupIsbn").value = isbn;
+                document.getElementById("popupTitle").value = data.title;
                 document.getElementById("popupImage").src = data.imageSource;
                 document.getElementById("popup").style.display = "block";
                 document.getElementById("interactive").style.display = "none";
