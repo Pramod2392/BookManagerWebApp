@@ -15,17 +15,20 @@
 
 
 <div id="popup" style="display: none;">
-    <label class="form-label">ISBN: </label>
+    @* <label class="form-label">ISBN: </label>
     <input type="text" disabled="disabled" id="popupIsbn" class="text text-secondary" />
-    <br />
+     *@<br />
 
-    <label class="form-label">Title: </label>
+    @* <label class="form-label">Title: </label>
     <input type="text" disabled="disabled" id="popupTitle" class="text text-primary" />
-    <br />
+    <br /> *@
 
+    
+    <label class="form-label">Title: </label>
     <input type="text" disabled="disabled" id="bookTitle" class="text text-primary" />
     <br />
 
+    <label class="form-label">ISBN: </label>
     <input type="text" disabled="disabled" id="bookISBN" class="text text-primary" />
     <br />
 
@@ -126,8 +129,8 @@
             .then(response => response.json())
             .then(data => {
 
-                document.getElementById("popupIsbn").value = isbn;
-                document.getElementById("popupTitle").value = data.title;
+                // document.getElementById("popupIsbn").value = isbn;
+                // document.getElementById("popupTitle").value = data.title;
                 document.getElementById("popupImage").src = data.imageSource;
                 document.getElementById("popup").style.display = "block";
                 document.getElementById("interactive").style.display = "none";
