@@ -15,15 +15,7 @@
 
 
 <div id="popup" style="display: none;">
-    @* <label class="form-label">ISBN: </label>
-    <input type="text" disabled="disabled" id="popupIsbn" class="text text-secondary" />
-     *@<br />
-
-    @* <label class="form-label">Title: </label>
-    <input type="text" disabled="disabled" id="popupTitle" class="text text-primary" />
-    <br /> *@
-
-    
+        
     <label class="form-label">Title: </label>
     <input type="text" disabled="disabled" id="bookTitle" class="text text-primary" />
     <br />
@@ -127,10 +119,7 @@
         const url = `/ScanBook?handler=Data&isbn=${encodeURIComponent(isbn)}`;
         fetch(url)
             .then(response => response.json())
-            .then(data => {
-
-                // document.getElementById("popupIsbn").value = isbn;
-                // document.getElementById("popupTitle").value = data.title;
+            .then(data => {                
                 document.getElementById("popupImage").src = data.imageSource;
                 document.getElementById("popup").style.display = "block";
                 document.getElementById("interactive").style.display = "none";
