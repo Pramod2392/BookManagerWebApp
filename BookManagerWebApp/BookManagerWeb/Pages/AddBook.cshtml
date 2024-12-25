@@ -18,6 +18,7 @@
     <div class="form-group>">
         <label style="width:75px" asp-for="addBook.Price">Price</label>
         <input class="form-control" asp-for="addBook.Price" />
+        <span asp-validation-for="addBook.Price" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -47,7 +48,11 @@
     }
     else
     {
-        <input class="form-control" asp-for="@Model.addBook.Image" />
+        <div class="form-group">
+            <input class="form-control" asp-for="@Model.addBook.Image" />
+            <span asp-validation-for="addBook.Image" class="text-danger"></span>
+        </div>
+        
     }
 
     
