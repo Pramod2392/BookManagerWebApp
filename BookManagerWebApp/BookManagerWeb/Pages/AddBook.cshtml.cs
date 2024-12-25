@@ -70,7 +70,7 @@ namespace BookManagerWeb.Pages
                 LanguageSelectedItemId = (languageList == null) ? 0 : languageList.SingleOrDefault(x => x.Name.Equals("English", StringComparison.OrdinalIgnoreCase)).Id;
             }
 
-            CategorySelectedItemId = (categoryList == null) ? 0 : categoryList.FirstOrDefault(x => x.Name.Contains(Category, StringComparison.OrdinalIgnoreCase), new Models.Category()).Id;
+            CategorySelectedItemId = (categoryList == null || string.IsNullOrWhiteSpace(Category)) ? 0 : categoryList.FirstOrDefault(x => x.Name.Contains(Category, StringComparison.OrdinalIgnoreCase), new Models.Category()).Id;
         }
 
 
@@ -106,6 +106,12 @@ namespace BookManagerWeb.Pages
                                                ContentType = "image/jpeg"
                                              };
                     }
+                }
+
+                // validate request
+                if (!ModelState.IsValid)
+                {
+                    return;
                 }
 
                 await addBook.Image.CopyToAsync(fileStream);
