@@ -45,7 +45,7 @@ namespace BookManagerWeb.Pages
             }
 
             // Navigate to Add New Book page with the model data
-            return RedirectToPage("/AddBook", new { Title = request.title, ImageUrl = request.imageSource, Language = request.language });
+            return RedirectToPage("/AddBook", new { Title = request.title, ImageUrl = request.imageSource, Language = request.language, Category = request.category });
         }
 
         public bool IsValidISBN(string isbn)
@@ -100,6 +100,7 @@ namespace BookManagerWeb.Pages
             string ImageURI = string.Empty;
             string Title = string.Empty;
             string LanguageInfo = string.Empty;
+            string CategoryInfo = string.Empty;
             string uri = $"books/v1/volumes?q=isbn:{isbn}&key={apiKey}";
             var response = await _httpClientGoogleManagerApiClient.GetAsync(uri);
             if (response.IsSuccessStatusCode)
@@ -117,9 +118,10 @@ namespace BookManagerWeb.Pages
                     ImageURI = deserializedObject?.Items[0]?.VolumeInfo?.ImageLinks?.Thumbnail;
                     LanguageInfo = deserializedObject?.Items[0]?.VolumeInfo?.Language;
                     Title = output?.Items[0]?.VolumeInfo?.Title;
+                    CategoryInfo = output?.Items[0]?.VolumeInfo.Categories?[0]?.ToString();
                 }
 
-                var data = new { Title = Title, ImageSource = ImageURI, Language = LanguageInfo };
+                var data = new { Title = Title, ImageSource = ImageURI, Language = LanguageInfo, Category = CategoryInfo };
                 return new JsonResult(data);                
             }
             return new JsonResult(output);            
@@ -131,6 +133,7 @@ namespace BookManagerWeb.Pages
         public string isbn { set; get; }
         public string title { get; set; }
         public string language { get; set; }
+        public string category { get; set; }
         public string imageSource { get; set; } = string.Empty;
     }
 }
