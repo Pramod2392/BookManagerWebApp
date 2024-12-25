@@ -28,6 +28,10 @@
     <input type="text" disabled="disabled" id="bookLanguage" class="text text-primary" />
     <br />
 
+    <label class="form-label">Category: </label>
+    <input type="text" disabled="disabled" id="bookCategory" class="text text-primary" />
+    <br />
+
     <img id="popupImage" />
     <br />
 
@@ -131,6 +135,7 @@
                 document.getElementById("bookTitle").value = data.title;
                 document.getElementById("bookISBN").value = isbn;
                 document.getElementById("bookLanguage").value = data.language;
+                document.getElementById("bookCategory").value = data.category
             })
             .catch(error => console.error('Error fetching data:', error));
     }
@@ -144,7 +149,7 @@
                 'Content-Type': 'application/json',
                 'RequestVerificationToken': token
             },
-            body: JSON.stringify({ isbn: document.getElementById("bookISBN").value, title: document.getElementById("bookTitle").value, imageSource: document.getElementById("popupImage").src, language: document.getElementById("bookLanguage").value })
+            body: JSON.stringify({ isbn: document.getElementById("bookISBN").value, title: document.getElementById("bookTitle").value, imageSource: document.getElementById("popupImage").src, language: document.getElementById("bookLanguage").value, category: document.getElementById("bookCategory").value })
         })
             .then(response => {
                 if (response.redirected) {
