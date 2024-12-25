@@ -70,7 +70,7 @@ namespace BookManagerWeb.Pages
                 LanguageSelectedItemId = (languageList == null) ? 0 : languageList.SingleOrDefault(x => x.Name.Equals("English", StringComparison.OrdinalIgnoreCase)).Id;
             }
 
-            CategorySelectedItemId = (categoryList == null) ? 0 : categoryList.FirstOrDefault(x => x.Name.Contains(Category, StringComparison.OrdinalIgnoreCase)).Id;
+            CategorySelectedItemId = (categoryList == null) ? 0 : categoryList.FirstOrDefault(x => x.Name.Contains(Category, StringComparison.OrdinalIgnoreCase), new Models.Category()).Id;
         }
 
 
