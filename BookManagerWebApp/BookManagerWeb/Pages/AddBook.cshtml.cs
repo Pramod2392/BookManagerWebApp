@@ -40,8 +40,6 @@ namespace BookManagerWeb.Pages
         [BindProperty()]
         public int LanguageSelectedItemId { get; set; } = 0;
 
-        [BindProperty()]
-        public string ErrorMessage { get; set; } = string.Empty;
         public async Task OnGetAsync(string Title, string ImageUrl, string Language, string Category)
         {
             var categoryList = await _downstreamApi.GetForUserAsync<List<Category>>("DownstreamApiBook",
