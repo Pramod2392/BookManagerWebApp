@@ -108,6 +108,9 @@ namespace BookManagerWeb.Pages
                     }
                 }
 
+                ModelState.Remove("imageURL");
+                ModelState.Remove("image");
+
                 // validate request
                 if (!ModelState.IsValid)
                 {
