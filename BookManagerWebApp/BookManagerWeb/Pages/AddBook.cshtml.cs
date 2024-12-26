@@ -112,6 +112,7 @@ namespace BookManagerWeb.Pages
                 // validate request
                 if (!ModelState.IsValid)
                 {
+                    _logger.LogError($"Model validation failed for the field: {ModelState.Where(x => x.Value.ValidationState.ToString().Equals("Invalid")).First().Key}");
                     return;
                 }
 
