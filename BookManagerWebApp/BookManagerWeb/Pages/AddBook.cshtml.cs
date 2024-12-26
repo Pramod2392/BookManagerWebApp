@@ -107,7 +107,7 @@ namespace BookManagerWeb.Pages
                 }
 
                 ModelState.Remove("imageURL");
-                ModelState.Remove("image");
+                ModelState.Remove("addBook.Image");
 
                 // validate request
                 if (!ModelState.IsValid)
