@@ -43,22 +43,48 @@
     
     @if(!string.IsNullOrWhiteSpace(@Model.ImageURL))
     {
-        <img src="@Model.ImageURL" />
+        <img id="imageURL" src="@Model.ImageURL" />
         @* <input class="form-control" asp-for="@Model.addBook.Image" src="@Model.ImageURL" /> *@
     }
     else
     {
         <div class="form-group">
-            <input class="form-control" asp-for="@Model.addBook.Image" />
-            <span asp-validation-for="addBook.Image" class="text-danger"></span>
+            <input id="image" class="form-control" asp-for="@Model.addBook.Image" />            
         </div>
         
     }
 
-    
+    <label id="validationError" class="text-danger" hidden="hidden"></label>
 
     <br />
 
-    <input class="btn btn-primary" type="submit" value="Add Book" />
+    <input class="btn btn-primary" onclick="return ValidateRequest()" type="submit" value="Add Book" />
 
 </form>
+
+<script>
+    function ValidateRequest(){
+        let imageURL = document.getElementById("imageURL");
+        let image = document.getElementById("image");
+        if(imageURL == null){
+            if(document.getElementById("image").value == ""){
+                document.getElementById("validationError").style.visibility = "visible";
+                document.getElementById("validationError").innerHTML = "Book image is required.Please upload the image of the book";
+                return false;
+            }
+        }
+        else if(image == null){
+            if(document.getElementById("imageURL").value == ""){
+                document.getElementById("validationError").style.visibility = "visible";
+                document.getElementById("validationError").innerHTML = "Book image is required.Please upload the image of the book";
+                return false;
+            }
+        }
+        else if(document.getElementById("imageURL").value == "" && document.getElementById("image").value == ""){
+            document.getElementById("validationError").style.visibility = "visible";
+            document.getElementById("validationError").innerHTML = "Book image is required.Please upload the image of the book";
+            return false;
+        }
+        return true;
+    }
+</script>

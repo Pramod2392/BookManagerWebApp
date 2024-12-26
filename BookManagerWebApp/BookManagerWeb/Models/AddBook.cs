@@ -6,8 +6,7 @@ namespace BookManagerWeb.Models
     {
         [Required]
         public string Title { get; set; }
-
-        [Required]
+        
         public IFormFile Image { get; set; }
         public int CategoryId { get; set; }
 
