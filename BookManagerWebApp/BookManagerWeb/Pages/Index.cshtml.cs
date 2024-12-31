@@ -35,7 +35,7 @@ namespace BookManagerWeb.Pages
             this._configuration = configuration;
         }
 
-        public async Task OnGetAsync(int? pageNumber, string? searchKey)
+        public async Task OnGetAsync(int? pageNumber, string? searchText)
         {
             //Check if the user has logged in for the first time.
             // If yes, call user api and add the user to the table
@@ -88,7 +88,7 @@ namespace BookManagerWeb.Pages
             
             this.PageNumber = pageNo >= 1 ? pageNo : 1;
 
-            searchText = string.IsNullOrWhiteSpace(searchKey) ? string.Empty : searchKey;
+            searchText = string.IsNullOrWhiteSpace(searchText) ? string.Empty : searchText;
             
             var baseUrl = _configuration["DownstreamApiBook:BaseUrl"]?.ToString();
             // Get list of user books
