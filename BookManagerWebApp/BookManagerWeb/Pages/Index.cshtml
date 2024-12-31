@@ -21,9 +21,9 @@
 <br/>
 <br/>
 
-<form method="get" asp-route-pageNumber="1" style="margin:1%">
+<form method="get" asp-route-pageNumber="1" asp-route-searchText="@Model.searchText" style="margin:1%">
     @* <label asp-for="@Model.searchText">Search: </label> *@
-    <input type="search" style="line-height:2" class="text rounded" asp-for="@Model.searchText" />
+    <input type="search" id="txtSearch" style="line-height:2" class="text rounded" asp-for="@Model.searchText" />
     <input type="submit" class="btn btn-secondary" title="Search" value="Search"  />
 </form>
 
@@ -45,13 +45,13 @@
 
     <a asp-page="./Index"
        asp-route-pageNumber="@(Model.PageNumber - 1)"
-       asp-route-searchKey="@Model.searchText"
+       asp-route-searchText="@Model.searchText"
        class="btn btn-link @prevDisabled">
         Previous
     </a>
     <a asp-page="./Index"
        asp-route-pageNumber="@(Model.PageNumber + 1)"
-       asp-route-searchKey="@Model.searchText"
+       asp-route-searchText="@Model.searchText"
        class="btn btn-link @nextDisabled">
         Next
     </a>
