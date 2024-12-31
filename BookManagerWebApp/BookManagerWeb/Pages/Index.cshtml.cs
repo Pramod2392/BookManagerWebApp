@@ -20,7 +20,7 @@ namespace BookManagerWeb.Pages
         public PagedBook? pagedBooks { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string searchText { get; set; } = string.Empty;
+        public string searchText { get; set; }
 
         public int PageNumber = 1;
         public int PageSize = 3;
