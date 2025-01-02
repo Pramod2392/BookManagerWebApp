@@ -1,0 +1,2 @@
+*.gif filter=lfs diff=lfs merge=lfs -text
+/BookManagerWebApp/BookManagerWeb/wwwroot/Images/Scan_Gif.gif filter=lfs diff=lfs merge=lfs -text
