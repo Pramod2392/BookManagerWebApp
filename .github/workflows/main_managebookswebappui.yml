@@ -16,6 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Install and pull Git LFS files
+      - name: Install Git LFS
+        run: git lfs install
+
+      - name: Pull Git LFS files
+        run: git lfs pull
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
