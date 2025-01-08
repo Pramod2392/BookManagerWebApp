@@ -11,6 +11,7 @@
 <div id="errorLable" style="display:none;">
     <p>Unable to scan the isbn</p>
     <button class="btn btn-primary" onclick="redirectToPage()">Add Book Manually</button>
+    <button class="btn btn-secondary" onclick="rescan()">Re-Scan</button>
 </div>
 
 
@@ -36,6 +37,7 @@
     <br />
 
     <button class="btn btn-primary" onclick="AddNewBook()">Add Book</button>
+    <button class="btn btn-secondary" onclick="Cancel()">Cancel</button>
     <button class="btn-close" onclick="closePopup()">Close</button>
 </div>
 
@@ -161,6 +163,14 @@
         //     if (data.url) {
         //         window.location.href = data.url; // Redirect to the specified URL
         //     });
+    }
+
+    function Cancel() {
+        window.location.href = "/Index";
+    }
+
+    function rescan() {
+        window.location.href = "/ScanBook";
     }
 
     function closePopup() {
