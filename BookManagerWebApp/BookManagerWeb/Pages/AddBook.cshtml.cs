@@ -109,7 +109,7 @@ namespace BookManagerWeb.Pages
                 ModelState.Remove("imageURL");
                 ModelState.Remove("addBook.Image");
 
-                if (addBook.Image.Length > 15728640)
+                if (addBook.Image?.Length > 15728640)
                 {
                     ModelState.AddModelError("addBook.Image", "The size of the image is too big.");
                     _logger.LogError("The size of the uploaded image is too big");
@@ -122,7 +122,7 @@ namespace BookManagerWeb.Pages
                     return;
                 }
                
-                await addBook.Image.CopyToAsync(fileStream);
+                await addBook.Image?.CopyToAsync(fileStream);
                 fileStream.Position = 0;
                 var streamContent = new StreamContent(fileStream, Convert.ToInt32(addBook.Image.Length));
 
