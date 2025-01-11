@@ -109,13 +109,19 @@ namespace BookManagerWeb.Pages
                 ModelState.Remove("imageURL");
                 ModelState.Remove("addBook.Image");
 
+                if (addBook.Image.Length > 15728640)
+                {
+                    ModelState.AddModelError("addBook.Image", "The size of the image is too big.");
+                    _logger.LogError("The size of the uploaded image is too big");
+                }
+
                 // validate request
                 if (!ModelState.IsValid)
                 {
                     _logger.LogError($"Model validation failed for the field: {ModelState.Where(x => x.Value.ValidationState.ToString().Equals("Invalid")).First().Key}");
                     return;
                 }
-
+               
                 await addBook.Image.CopyToAsync(fileStream);
                 fileStream.Position = 0;
                 var streamContent = new StreamContent(fileStream, Convert.ToInt32(addBook.Image.Length));
